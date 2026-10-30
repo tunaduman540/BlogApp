@@ -1,0 +1,22 @@
+# Derleme dosyaları
+bin/
+obj/
+
+# Visual Studio dosyaları
+.vs/
+
+# Kullanıcıya özel dosyalar
+*.user
+*.suo
+
+# Gizli bağlantı bilgileri
+appsettings.json
+appsettings.Development.json
+
+# Yerel veritabanı dosyaları
+*.mdf
+*.ldf
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db

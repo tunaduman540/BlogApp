@@ -1,0 +1,46 @@
+@model BlogApp.ViewModels.EditPostViewModel
+
+@{
+    ViewData["Title"] = "Yazıyı Düzenle";
+}
+
+<h1>Blog Yazısını Düzenle</h1>
+
+<form asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Başlık</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Content" class="form-label">İçerik</label>
+        <textarea asp-for="Content" class="form-control" rows="6"></textarea>
+    </div>
+
+    
+    <div class="mb-3">
+        <label class="form-label">Etiketler</label>
+
+        @foreach (var tag in ViewBag.Tags)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="SelectedTagIds" value="@tag.Id" id="tag_@tag.Id"
+                       checked="@Model.SelectedTagIds.Contains((int)tag.Id)" />
+
+                <label class="form-check-label" for="tag_@tag.Id">
+                    @tag.Name
+                </label>
+            </div>
+        }
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">
+        Değişiklikleri Kaydet
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        İptal
+    </a>
+</form>

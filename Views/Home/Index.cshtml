@@ -1,0 +1,183 @@
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="container py-5">
+
+    <section class="rounded-4 p-4 p-md-5 mb-5 text-white shadow"
+             style="background: linear-gradient(135deg, #0d6efd, #6f42c1);">
+
+        <div class="row align-items-center g-4">
+
+            <div class="col-lg-8">
+
+                <span class="badge bg-light text-primary mb-3 px-3 py-2">
+                    BLOGAPP'A HOŞ GELDİN
+                </span>
+
+                <h1 class="display-4 fw-bold mb-3">
+                    Fikirlerini paylaş,<br />
+                    yeni dünyalar keşfet.
+                </h1>
+
+                <p class="lead mb-4">
+                    BlogApp ile düşüncelerini yazıya dök, deneyimlerini paylaş
+                    ve farklı konularda yeni şeyler öğren.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+
+                    <a asp-controller="Posts"
+                       asp-action="Index"
+                       class="btn btn-light btn-lg text-primary fw-semibold">
+                        <i class="bi bi-journal-text me-2"></i>
+                        Yazıları Keşfet
+                    </a>
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Posts"
+                           asp-action="Create"
+                           class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-pencil-square me-2"></i>
+                            Yazı Oluştur
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account"
+                           asp-action="Register"
+                           class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-person-plus me-2"></i>
+                            Hemen Katıl
+                        </a>
+                    }
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4 text-center d-none d-lg-block">
+                <i class="bi bi-journal-richtext"
+                   style="font-size: 9rem; opacity: 0.9;"></i>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Özellikler -->
+    <section class="mb-5">
+
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">BlogApp ile neler yapabilirsin?</h2>
+            <p class="text-secondary">
+                Fikirlerini paylaşmak ve yeni içerikler keşfetmek için ihtiyacın olan her şey.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+
+                        <div class="rounded-3 bg-primary bg-opacity-10
+                                    text-primary d-inline-flex p-3 mb-3">
+                            <i class="bi bi-pencil-square fs-3"></i>
+                        </div>
+
+                        <h5 class="fw-bold">Yazılarını Paylaş</h5>
+
+                        <p class="text-secondary mb-0">
+                            Kendi blog yazılarını oluştur, fikirlerini anlat
+                            ve deneyimlerini diğer kullanıcılarla paylaş.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+
+                        <div class="rounded-3 bg-success bg-opacity-10
+                                    text-success d-inline-flex p-3 mb-3">
+                            <i class="bi bi-tags fs-3"></i>
+                        </div>
+
+                        <h5 class="fw-bold">Konuları Keşfet</h5>
+
+                        <p class="text-secondary mb-3">
+                            Etiketlere göre yazıları filtrele ve ilgini çeken
+                            içerikleri kolayca bul.
+                        </p>
+
+                        <a asp-controller="Posts"
+                           asp-action="Index"
+                           class="text-decoration-none fw-semibold">
+                            Yazıları incele
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+
+                        <div class="rounded-3 bg-warning bg-opacity-10
+                                    text-warning d-inline-flex p-3 mb-3">
+                            <i class="bi bi-chat-dots fs-3"></i>
+                        </div>
+
+                        <h5 class="fw-bold">Etkileşim Kur</h5>
+
+                        <p class="text-secondary mb-0">
+                            Yazılara yorum yap, diğer kullanıcıların
+                            profillerini ziyaret et ve fikir alışverişinde bulun.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Alt çağrı alanı -->
+    <section class="bg-light rounded-4 p-4 p-md-5 text-center">
+
+        <h2 class="fw-bold mb-3">
+            Senin hikâyen ne?
+        </h2>
+
+        <p class="text-secondary mb-4">
+            BlogApp topluluğuna katıl ve ilk yazını paylaşmaya başla.
+        </p>
+
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="Posts"
+               asp-action="Create"
+               class="btn btn-primary btn-lg rounded-pill px-4">
+                <i class="bi bi-plus-lg me-2"></i>
+                Yeni Yazı Oluştur
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Account"
+               asp-action="Register"
+               class="btn btn-primary btn-lg rounded-pill px-4">
+                <i class="bi bi-person-plus me-2"></i>
+                Ücretsiz Kayıt Ol
+            </a>
+        }
+
+    </section>
+
+</div>

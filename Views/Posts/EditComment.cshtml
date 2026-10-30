@@ -1,0 +1,37 @@
+
+@model BlogApp.ViewModels.EditCommentViewModel
+
+<div class="container mt-4">
+    <h2>Yorumu Düzenle</h2>
+
+    <form asp-controller="Posts"
+          asp-action="EditComment"
+          asp-route-id="@ViewBag.CommentId"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="Text" class="form-label">
+                Yorumunuz
+            </label>
+
+            <textarea asp-for="Text"
+                      class="form-control"
+                      rows="4"></textarea>
+
+            <span asp-validation-for="Text"
+                  class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Değişiklikleri Kaydet
+        </button>
+
+        <a asp-controller="Posts"
+           asp-action="Index"
+           class="btn btn-secondary">
+            İptal
+        </a>
+    </form>
+</div>

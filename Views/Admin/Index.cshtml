@@ -1,0 +1,107 @@
+@model List<BlogApp.Entities.Post>
+
+@{
+    ViewData["Title"] = "Admin Paneli";
+}
+
+<div class="container py-5">
+
+    <div class="mb-4">
+        <span class="badge text-bg-primary mb-2">BLOGAPP YÖNETİM</span>
+        <h1 class="fw-bold">Admin Paneli</h1>
+        <p class="text-secondary">
+            Kullanıcıların paylaştığı ve onay bekleyen yazıları incele.
+        </p>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body text-center py-5">
+                <h4 class="fw-bold">Onay bekleyen yazı yok</h4>
+                <p class="text-secondary mb-0">
+                    Yeni yazılar gönderildiğinde burada görünecek.
+                </p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var post in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4 d-flex flex-column">
+
+                            <span class="badge text-bg-warning align-self-start mb-3">
+                                Onay Bekliyor
+                            </span>
+
+                            <h5 class="fw-bold">@post.Title</h5>
+
+                            <p class="text-secondary">
+                                @(post.Content.Length > 150
+                                    ? post.Content.Substring(0, 150) + "..."
+                                    : post.Content)
+                            </p>
+
+                            <p class="small text-secondary">
+                                Yazar: @post.User?.Username
+                                <br />
+                                Tarih: @post.PublishedOn.ToString("dd.MM.yyyy")
+                            </p>
+
+                            @if (post.PostTags.Any())
+                            {
+                                <div class="mb-3">
+                                    @foreach (var postTag in post.PostTags)
+                                    {
+                                        <span class="badge text-bg-light border text-dark me-1">
+                                            @postTag.Tag?.Name
+                                        </span>
+                                    }
+                                </div>
+                            }
+
+                            <div class="mt-auto d-flex gap-2">
+
+                                <form asp-controller="Admin" asp-action="Approve" asp-route-id="@post.Id" method="post"
+                                      class="flex-fill">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Onayla
+                                    </button>
+                                </form>
+
+                                <form asp-controller="Admin" asp-action="Reject" asp-route-id="@post.Id" method="post"
+                                      class="flex-fill" onsubmit="return confirm('Bu yazıyı reddetmek istediğine emin misin?');">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit" class="btn btn-outline-danger w-100">
+                                        <i class="bi bi-x-circle me-1"></i>
+                                        Reddet
+                                    </button>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>

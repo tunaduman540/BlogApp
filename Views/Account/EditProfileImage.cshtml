@@ -1,0 +1,38 @@
+
+@model BlogApp.ViewModels.ProfileImageViewModel
+
+<div class="container mt-4">
+    <h2>Profil Fotoğrafını Değiştir</h2>
+
+    <form asp-controller="Account"
+          asp-action="EditProfileImage"
+          method="post"
+          enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="ProfileImage" class="form-label">
+                Fotoğraf Seç
+            </label>
+
+            <input asp-for="ProfileImage"
+                   type="file"
+                   accept="image/jpeg,image/png,image/webp"
+                   class="form-control" />
+
+            <span asp-validation-for="ProfileImage"
+                  class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Fotoğrafı Yükle
+        </button>
+
+        <a asp-controller="Account"
+           asp-action="Profile"
+           class="btn btn-secondary">
+            İptal
+        </a>
+    </form>
+</div>

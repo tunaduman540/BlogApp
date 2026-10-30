@@ -1,0 +1,159 @@
+@model List<BlogApp.Entities.Post>
+
+@{
+    ViewData["Title"] = "Blog Yazıları";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+        @TempData["Success"]
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <span class="badge text-bg-info mb-2">BLOGAPP</span>
+        <h1 class="fw-bold mb-1">Blog Yazıları</h1>
+        <p class="text-secondary mb-0">
+            Yeni fikirleri keşfet ve yazılarını paylaş.
+        </p>
+    </div>
+
+    <a asp-controller="Posts" asp-action="Create" class="btn btn-primary">
+        + Yeni Yazı
+    </a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="bg-white rounded-4 shadow-sm p-5 text-center">
+        <h4>Henüz yazı yok</h4>
+        <p class="text-secondary">
+            İlk blog yazısını oluşturarak başlayabilirsin.
+        </p>
+        <a asp-action="Create" class="btn btn-primary">
+            İlk Yazını Oluştur
+        </a>
+    </div>
+}
+else
+{
+    
+    <div class="container mt-4">
+
+        <div class="mb-4">
+            <strong>Etikete göre filtrele:</strong>
+
+            <a asp-controller="Posts" asp-action="Index"
+               class="btn btn-sm @(ViewBag.SelectedTagId == null ? "btn-primary" : "btn-outline-primary") me-1">
+                Tümü
+            </a>
+
+            @foreach (var tag in ViewBag.Tags)
+            {
+                <a asp-controller="Posts" asp-action="Index" asp-route-tagId="@tag.Id"
+                   class="btn btn-sm @(ViewBag.SelectedTagId != null && (int)ViewBag.SelectedTagId == (int)tag.Id ? "btn-primary" : "btn-outline-primary") me-1 mb-1">
+                    @tag.Name
+                </a>
+            }
+        </div>
+
+    </div>
+
+    <div class="row g-4">
+        @foreach (var post in Model)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <article class="card blog-card h-100 shadow-sm">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge rounded-pill text-bg-light border">
+                                Blog Yazısı
+                            </span>
+                            <small class="text-secondary">
+                                @post.PublishedOn.ToString("dd.MM.yyyy")
+                            </small>
+                        </div>
+
+                        <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id"
+                           class="text-decoration-none text-dark">
+                            <h4 class="fw-bold mb-3">@post.Title</h4>
+                        </a>
+
+                        <p class="text-secondary">
+                            @(post.Content.Length > 120
+                                ? post.Content.Substring(0, 120) + "..."
+                                : post.Content)
+                        </p>
+
+                        <div class="mt-auto pt-3 border-top">
+                            <div class="d-flex align-items-center gap-2">
+                                @if (post.User?.ProfileImage != null)
+                                {
+                                    <img src="@Url.Action("ProfileImage", "Account",
+                                                 new { id = post.UserId })" alt="Profil fotoğrafı"
+                                         class="rounded-circle" style="width: 38px; height: 38px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="rounded-circle bg-primary text-white
+                                        d-flex align-items-center justify-content-center fw-bold"
+                                         style="width: 38px; height: 38px;">
+                                        @(string.IsNullOrEmpty(post.User?.Username)
+                                            ? "?"
+                                            : post.User.Username.Substring(0, 1).ToUpper())
+                                    </div>
+                                }
+
+                                <div>
+                                    <small class="text-secondary d-block">
+                                        Yazar
+                                    </small>
+                                    <strong>
+                                        <a asp-controller="Account" asp-action="UserProfile" asp-route-id="@post.UserId"
+                                           class="text-decoration-none text-dark">
+                                            @post.User.Username
+                                        </a>
+                                    </strong>
+                                </div>
+
+                                @if (User.Identity != null &&
+     User.Identity.IsAuthenticated &&
+     User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+         == post.UserId.ToString())
+                                {
+                                    <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id"
+                                       class="btn btn-primary ms-auto">
+                                        Düzenle
+                                    </a>
+                                }
+
+                                @if (User.Identity != null &&
+                                     User.Identity.IsAuthenticated &&
+                                     (User.IsInRole("Admin") ||
+                                      User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                                          == post.UserId.ToString()))
+                                {
+                                    <form asp-controller="Posts" asp-action="Delete" asp-route-id="@post.Id" method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Bu blog yazısını silmek istediğinize emin misiniz?');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit" class="btn btn-danger">
+                                            Sil
+                                        </button>
+                                    </form>
+                                }
+                                
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        }
+    </div>
+}
